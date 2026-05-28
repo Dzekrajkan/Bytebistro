@@ -107,7 +107,8 @@ class Command(BaseCommand):
                 oi.order = order
             OrderItem.objects.bulk_create(order_items_to_create)
             if payment_method:
-                Payment.objects.create(order=order, amount=total_with_tax, payment_method=payment_method)
+                payment = Payment.objects.create(order=order, amount=total_with_tax, payment_method=payment_method)
+                Payment.objects.filter(pk=payment.pk).update(created_at=created_at)
             return order
 
         create_order(table=t1, order_type="DI", status="S", items_data=[(m["Classic Burger"], 2), (m["Cola"], 2)], created_at=make_time(12, 10), payment_method="CS")

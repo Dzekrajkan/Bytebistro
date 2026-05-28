@@ -2,6 +2,7 @@ import { Link, Outlet, useLocation } from "react-router-dom"
 import { useAuth } from "../hooks/useAuth"
 import { fetchLogout } from "../redux/authSlice"
 import { useAppDispatch } from "../store/store"
+import toast from "react-hot-toast"
 
 function MainLayout() {
   const dispatch = useAppDispatch()
@@ -17,6 +18,13 @@ function MainLayout() {
     }
   }
 
+  const handleRedirect = (e: React.MouseEvent,role: ("AD" | "CA" | "WA" | "CH")[]) => {
+    if (!user || !role.includes(user.role)) {
+      e.preventDefault()
+      toast.error("You have no permission")
+    }
+  }
+
   return (
     <div>
       <aside className="hidden min-[1150px]:flex flex-col w-64 h-screen border-r fixed left-0 top-0 z-30 shadow-md">
@@ -24,11 +32,11 @@ function MainLayout() {
           <div className="text-xl font-bold text-blue-500 flex items-center" translate="no">Bytebistro</div>
         </div>
         <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
-          <Link to="/"  onClick={() => isActive("/")} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive("/") ? "bg-blue-500 shadow-blue-500/20 text-white shadow-md" : "hover:bg-zinc-100 hover:text-black text-zinc-400"}`}>Sale</Link>
-          <Link to="/tables" onClick={() => isActive("/tables")} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive("/tables") ? "bg-blue-500 shadow-blue-500/20 text-white shadow-md" : "hover:bg-zinc-100 hover:text-black text-zinc-400"}`}>Tables</Link>
-          <Link to="/orders" onClick={() => isActive("/orders")} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive("/orders") ? "bg-blue-500 shadow-blue-500/20 text-white shadow-md" : "hover:bg-zinc-100 hover:text-black text-zinc-400"}`}>Live Orders</Link>
-          <Link to="/history" onClick={() => isActive("/history")} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive("/history") ? "bg-blue-500 shadow-blue-500/20 text-white shadow-md" : "hover:bg-zinc-100 hover:text-black text-zinc-400"}`}>History</Link>
-          <Link to="/register" onClick={() => isActive("/register")} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive("/register") ? "bg-blue-500 shadow-blue-500/20 text-white shadow-md" : "hover:bg-zinc-100 hover:text-black text-zinc-400"}`}>Register</Link>
+          <Link to="/"  onClick={(e) => handleRedirect(e, ["AD", "CA"])} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive("/") ? "bg-blue-500 shadow-blue-500/20 text-white shadow-md" : "hover:bg-zinc-100 hover:text-black text-zinc-400"}`}>Sale</Link>
+          <Link to="/tables" onClick={(e) => handleRedirect(e, ["AD", "WA"])} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive("/tables") ? "bg-blue-500 shadow-blue-500/20 text-white shadow-md" : "hover:bg-zinc-100 hover:text-black text-zinc-400"}`}>Tables</Link>
+          <Link to="/orders" onClick={(e) => handleRedirect(e, ["AD", "CH"])} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive("/orders") ? "bg-blue-500 shadow-blue-500/20 text-white shadow-md" : "hover:bg-zinc-100 hover:text-black text-zinc-400"}`}>Live Orders</Link>
+          <Link to="/history" onClick={(e) => handleRedirect(e, ["AD"])} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive("/history") ? "bg-blue-500 shadow-blue-500/20 text-white shadow-md" : "hover:bg-zinc-100 hover:text-black text-zinc-400"}`}>History</Link>
+          <Link to="/register" onClick={(e) => handleRedirect(e, ["AD"])} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${isActive("/register") ? "bg-blue-500 shadow-blue-500/20 text-white shadow-md" : "hover:bg-zinc-100 hover:text-black text-zinc-400"}`}>Register</Link>
         </nav>
         <div className="p-4 border-t">
           <div className="flex py-3 px-4 mb-2 bg-zinc-300/20 rounded-xl items-center gap-2">

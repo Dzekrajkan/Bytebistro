@@ -11,7 +11,7 @@ interface LoginState {
 interface User {
     id: number,
     username: string,
-    role: string
+    role: ("AD" | "CA" | "WA" | "CH")
 }
 
 interface TypeInitialState {

@@ -5,9 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import get_user_model
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema
 from django_ratelimit.decorators import ratelimit
@@ -27,7 +27,7 @@ class CookieTokenRefreshView(TokenRefreshView):
         serializer = self.get_serializer(data={"refresh": refresh_token})
         try:
             serializer.is_valid(raise_exception=True)
-        except (ValidationError, get_user_model().DoesNotExist):
+        except (TokenError, InvalidToken, ValidationError):
             return Response({"detail": "Invalid refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
         data = serializer.validated_data
 
@@ -40,7 +40,7 @@ class CookieTokenRefreshView(TokenRefreshView):
             httponly=True,
             secure=False,
             samesite="Lax",
-            max_age=50 * 15
+            max_age=60 * 15
         )
     
         return response

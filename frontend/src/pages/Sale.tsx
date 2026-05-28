@@ -83,7 +83,8 @@ function Sale() {
         await api.post(`orders/${order.id}/pay/`, {payment_method: type})
         setCreatedOrder(false)
       } catch (err: any) {
-        console.log(err)
+        toast.error("Payment failed. Try again.")
+        throw err
       }
     }
 

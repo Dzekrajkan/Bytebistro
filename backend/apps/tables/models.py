@@ -5,7 +5,6 @@ class Table(models.Model):
         FREE = "F", "Free"
         OCCUPIED = "O", "Occupied"
         RESERVED = "R", "Reserved"
-        CLOSED = "C", "Closed"
     number = models.IntegerField(unique=True)
     seats_count = models.IntegerField()
     status = models.CharField(max_length=1, choices=Status.choices, default=Status.FREE)
